@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {useAppDispatch, useAppSelector} from "./bll/store";
-import {createConnection, destroyConnection} from "./bll/chatReducer";
+import {createConnection, destroyConnection, setClientMessage, setClientName} from "./bll/chatReducer";
 
 
 function App() {
 
-	const messages = useAppSelector(store => store.chat)
+	const messages = useAppSelector(store => store.chat.messages)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
@@ -16,7 +16,6 @@ function App() {
 		}
 	}, [])
 
-	// const [messages, setMessages] = useState<any[]>([])
 	const [message, setMessage] = useState('')
 	const [name, setName] = useState('Ker9')
 
@@ -35,12 +34,12 @@ function App() {
 				setName(e.currentTarget.value)
 			}}/>
 			<button style={{marginBottom: '40px'}} onClick={() => {
-				socket.emit('client-name-sent', name)
+				dispatch(setClientName(name))
 			}}>send name
 			</button>
 			<textarea value={message} onChange={(e) => setMessage(e.currentTarget.value)}></textarea>
 			<button onClick={() => {
-				socket.emit('client-message-sent', message)
+				dispatch(setClientMessage(message))
 			}}>send message
 			</button>
 		</div>

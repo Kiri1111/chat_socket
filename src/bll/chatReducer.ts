@@ -1,4 +1,4 @@
-import {Dispatch} from "react";
+import {api} from "../dal/api";
 
 const initialState = {
 	messages: []
@@ -22,8 +22,22 @@ export const newMessageReceived = (message: any) => ({type: 'NEW_MESSAGE_RECEIVE
 
 
 export const createConnection = () => (dispatch: any) => {
-
+	api.createConnection()
+	api.subscribe((messages: any) => {
+			dispatch(messagesReceived(messages))
+		},
+		(message: any) => {
+			dispatch(newMessageReceived(message))
+		},
+	)
 }
 export const destroyConnection = () => (dispatch: any) => {
+	api.destroyConnection()
+}
 
+export const setClientName = (name: string) => (dispatch: any) => {
+	api.sendName(name)
+}
+export const setClientMessage = (message: string) => (dispatch: any) => {
+	api.sendMessage(message)
 }
